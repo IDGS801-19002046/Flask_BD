@@ -1,12 +1,17 @@
 from flask import Flask,render_template,request
 from flask import flash
 from flask_wtf.csrf import CSRFProtect
+from config import DevelopmentConfig
 from flask import g
 import forms
+from models import db
+from models import Alumnos
 from wtforms import validators
 
 app=Flask(__name__)
-app.secret_key='Esta mi clave secreta'
+app.config.from_object(DevelopmentConfig)
+csrf=CSRFProtect()
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -14,7 +19,6 @@ def page_not_found(e):
 
 @app.before_request
 def before_request():
-    g.nombre='Mario'
     print("before 1")
     
 @app.after_request
@@ -22,9 +26,22 @@ def after_request(response):
     print("after 3")
     return response
 
-@app.route("/")
+@app.route("/index", methods=['GET','POST'])
 def index():
+        create_form=forms.UserForm2(request.form)
+        if request.method=='POST':
+         alum=Alumnos(nombre=create_form.nombre.data,
+                      apaterno=create_from.apaterno.data,
+                      email=create_from.email.data)
+         #insert alumnos()values()
+         db.session.add(alum)
+         db.session.commit()
+        return render_template("index.html",form=create_from)
+    
+@app.route("/")
+def index2():
         return render_template("index.html")
+    
     
 @app.route("/alumnos")
 def alumnos():
@@ -34,7 +51,7 @@ def alumnos():
 
 @app.route("/alumnos2", methods=["GET", "POST"])
 def alumnos2():
-    print("alumno: {}".format(g.nombre))
+ 
     nom = ''
     apa = ''
     ama = ''
@@ -116,4 +133,10 @@ def resul():
         return"La multiplicacion de {} x {} = {}".format(num1,num2,str(int(num1)*int(num2)))
    
 if __name__== "__main__":
-    app.run(debug=True)
+    csrf.init_app(app)
+    db.init_app(app)
+    
+    with app.app_context():
+        db.create_all()
+    app.run()
+    
