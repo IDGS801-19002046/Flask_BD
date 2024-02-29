@@ -1,41 +1,47 @@
-from wtforms import Form, StringField, IntegerField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms import Form
+from flask_wtf import FlaskForm
+
+from wtforms import Form, StringField, IntegerField, validators
+
 
 class UserForm(Form):
-    nombre = StringField('Nombre', validators=[
-        DataRequired(message="El nombre es requerido"),
-        Length(min=4, max=50, message="Ingresa un nombre válido (entre 4 y 50 caracteres)")
-    ])
-    email = StringField("Email", validators=[
-        DataRequired(message="El email es requerido"),
-        Email(message="Ingresa un email válido")
-    ])
-    apaterno = StringField("Apellido Paterno", validators=[
-        DataRequired(message="El apellido paterno es requerido"),
-        Length(min=4, max=50, message="Ingresa un apellido paterno válido (entre 4 y 50 caracteres)")
-    ])
-    amaterno = StringField('Apellido Materno', validators=[
-        DataRequired(message="El apellido materno es requerido"),
-        Length(min=4, max=50, message="Ingresa un apellido materno válido (entre 4 y 50 caracteres)")
-    ])
-    edad = IntegerField('Edad', validators=[
-        DataRequired(message="La edad es requerida")
-    ])
     
+    nombre = StringField('nombre', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Length(min=4, max=10, message='Ingresa un nombre válido')
+    ])
+    email = StringField('email', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Email(message='Ingresa un email válido')
+    ])
+    apaterno = StringField('apaterno', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Length(min=4, max=30, message='Ingresa un apellido válido')
+    ])
+    amaterno = StringField('amaterno', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Length(min=4, max=10, message='Ingresa un apellido válido')
+    ])
+    edad = IntegerField('edad', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.NumberRange(min=1, max=120, message='Ingresa una edad válida')
+    ])
+
 class UserForm2(Form):
     id=IntegerField('id',
                     [validators.number_range(min=1, max=20, message='valor no valido')])
     
-    nombre = StringField('Nombre', validators=[
-        DataRequired(message="El nombre es requerido"),
-        Length(min=4, max=50, message="Ingresa un nombre válido (entre 4 y 50 caracteres)")
+    nombre = StringField('nombre', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Length(min=4, max=10, message='Ingresa un nombre válido')
     ])
-    email = EmailField("Correo", validators=[
-        DataRequired(message="El email es requerido"),
-        Email(message="Ingresa un email válido")
-    ])
-    apaterno = StringField("Apellido Paterno", validators=[
-        DataRequired(message="El apellido paterno es requerido"),
-        Length(min=4, max=50, message="Ingresa un apellido paterno válido (entre 4 y 50 caracteres)")
+
+    apaterno = StringField('apaterno', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Length(min=4, max=30, message='Ingresa un apellido válido')
     ])
    
+    email = StringField('email', [
+        validators.DataRequired(message='El campo es requerido'),
+        validators.Email(message='Ingresa un email válido')
+    ])
